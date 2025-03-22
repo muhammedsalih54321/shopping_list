@@ -52,7 +52,21 @@ class CategoryProductsScreen extends StatelessWidget {
             onTap: () {
               // Handle adding product action
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("${products[index]} added")),
+                SnackBar(
+                  backgroundColor: Color(0xFF5856D6),
+                  behavior: SnackBarBehavior.floating,
+                  action: SnackBarAction(label: 'Dismiss', textColor:Colors.white,onPressed: (){}),
+                  content: Text(
+                    "${products[index]} added",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w500,
+                      height: 1.29.h,
+                      letterSpacing: -0.41,
+                    ),
+                  ),
+                ),
               );
             },
           );

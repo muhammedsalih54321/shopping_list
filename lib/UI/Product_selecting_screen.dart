@@ -38,21 +38,7 @@ class _ProductSelectingScreenState extends State<ProductSelectingScreen> {
               ),
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'Done',
-                style: GoogleFonts.poppins(
-                  color: Color(0xFF5856D6),
-                  fontSize: 17.sp,
-                  fontWeight: FontWeight.w600,
-                  height: 1.29.h,
-                  letterSpacing: -0.41,
-                ),
-              ),
-            ),
-          ],
+          
           bottom: AppBar(
             automaticallyImplyLeading: false,
             title: Container(
