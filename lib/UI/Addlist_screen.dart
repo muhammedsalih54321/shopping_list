@@ -26,6 +26,9 @@ class _AddlistScreenState extends State<AddlistScreen> {
     'Food',
   ];
 
+ 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +52,30 @@ class _AddlistScreenState extends State<AddlistScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>AddproductsList()));
+              if (_controller.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Color(0xFF5856D6),
+                  behavior: SnackBarBehavior.floating,
+                  action: SnackBarAction(label: 'Dismiss', textColor:Colors.white,onPressed: (){}),
+                  content: Text(
+                    'Please enter a list title',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w500,
+                      height: 1.29.h,
+                      letterSpacing: -0.41,
+                    ),
+                  ),
+                ),
+              );
+                return;
+              }else{
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>AddproductsList(listname: _controller.text.toString(),)));
+              
+                 
+              }
             },
             child: Text(
               'Done',
@@ -127,7 +153,7 @@ class _AddlistScreenState extends State<AddlistScreen> {
                         },
                         child: Container(
                           height: 30.h,
-                          width: 100.w,
+                         width: Suggestions[index].length * 12.0.w,
                           decoration: BoxDecoration(
                             color: Color(0xFF5856D6),
                             borderRadius: BorderRadius.circular(20.r),

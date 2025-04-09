@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shopping_list/Components/Products_list.dart';
-import 'package:shopping_list/UI/categories_product_screen.dart';
+
 // Ensure this file exists
 
 class CatalogScreen extends StatelessWidget {
-  
+  final Function(Map<String, dynamic>) onNavigate;
 
+  const CatalogScreen({super.key, required this.onNavigate});
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -42,19 +43,13 @@ class CatalogScreen extends StatelessWidget {
               letterSpacing: -0.41,
             ),
           ),
-          trailing:  Icon(Icons.arrow_forward_ios, size: 16.sp,color: Colors.grey,),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 16.sp,
+            color: Colors.grey,
+          ),
           onTap: () {
-            // Navigate to Category Products Screen
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => CategoryProductsScreen(
-                      categoryName: category["name"]!,
-                      products: category["products"],
-                    ),
-              ),
-            );
+            onNavigate(categories[index]); // Pass selected category
           },
         );
       },

@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shopping_list/UI/Product_selecting_screen.dart';
 
 class AddproductsList extends StatefulWidget {
-  const AddproductsList({super.key});
+  final String listname;
+  const AddproductsList({super.key, required this.listname});
 
   @override
   State<AddproductsList> createState() => _AddproductsListState();
@@ -32,13 +33,13 @@ class _AddproductsListState extends State<AddproductsList> {
             ),
           ),
         ),
-        
+
         bottom: AppBar(
           automaticallyImplyLeading: false,
           title: Padding(
             padding: EdgeInsets.only(left: 10.w),
             child: Text(
-              'Add Products',
+              widget.listname,
               style: GoogleFonts.poppins(
                 color: Colors.black,
                 fontSize: 34.sp,
@@ -50,11 +51,41 @@ class _AddproductsListState extends State<AddproductsList> {
           ),
         ),
       ),
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: IconButton(
+              onPressed: () {},
+              icon: Icon(BootstrapIcons.circle, color:Color(0xFF5856D6),size: 20.sp,),
+            ),
+            title: Text(
+              'Fish',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+                height: 1.21.h,
+                letterSpacing: 0.40,
+              ),
+            ) ,
+            trailing:Text(
+              '2',
+              style: GoogleFonts.poppins(
+                color: const Color.fromARGB(255, 110, 110, 110),
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w500,
+                height: 1.21.h,
+                letterSpacing: 0.40,
+              ),
+            ) ,
+          );
+        },
+      ),
       floatingActionButton: InkWell(
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => ProductSelectingScreen()),
+            MaterialPageRoute(builder: (_) => ProductSelectingScreen(listname: widget.listname,)),
           );
         },
         child: Container(
@@ -64,9 +95,9 @@ class _AddproductsListState extends State<AddproductsList> {
             borderRadius: BorderRadius.circular(50.r),
             color: Color(0xFF5856D6),
           ),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              
               Icon(BootstrapIcons.plus, color: Colors.white, size: 35.sp),
               Text(
                 'ADD',
@@ -76,7 +107,7 @@ class _AddproductsListState extends State<AddproductsList> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(width: 5.w,)
+              SizedBox(width: 5.w),
             ],
           ),
         ),
