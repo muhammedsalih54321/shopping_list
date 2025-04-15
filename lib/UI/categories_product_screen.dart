@@ -2,14 +2,14 @@ import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shopping_list/UI/Popular_product_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_list/Provider/productselecting_logic.dart';
 
-class CategoryProductsScreen extends StatefulWidget {
+class CategoryProductsScreen extends StatelessWidget {
   final String categoryName;
   final String categoryimage;
   final List<String> products;
   final VoidCallback onBack;
-  final Function onSelectedProductsChanged;
 
   const CategoryProductsScreen({
     Key? key,
@@ -17,20 +17,16 @@ class CategoryProductsScreen extends StatefulWidget {
     required this.products,
     required this.onBack,
     required this.categoryimage,
-    required this.onSelectedProductsChanged,
   }) : super(key: key);
 
   @override
-  State<CategoryProductsScreen> createState() => _CategoryProductsScreenState();
-}
-
-class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
-  @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<ProductSelectionProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.categoryName,
+          categoryName,
           style: GoogleFonts.poppins(
             color: Colors.black,
             fontSize: 20.sp,
@@ -41,7 +37,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Color(0xFF5856D6)),
-          onPressed: widget.onBack,
+          onPressed: onBack,
           iconSize: 20.sp,
         ),
         actions: [
@@ -53,27 +49,22 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               decoration: ShapeDecoration(shape: OvalBorder()),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Center(child: Image.asset(widget.categoryimage)),
+                child: Center(child: Image.asset(categoryimage)),
               ),
             ),
           ),
         ],
       ),
       body: ListView.builder(
-        itemCount: widget.products.length,
+        itemCount: products.length,
         itemBuilder: (context, index) {
-          final product = widget.products[index];
-          final isSelected = selectedProducts.containsKey(product);
-          final quantity = selectedProducts[product] ?? 0;
+          final product = products[index];
+          final isSelected = provider.isProductSelected(product);
+          final quantity = provider.getProductQuantity(product);
+
           return ListTile(
             leading: InkWell(
-              onTap: () {
-                setState(() {
-                  selectedProducts[product] =
-                      (selectedProducts[product] ?? 0) + 1;
-                  widget.onSelectedProductsChanged();
-                });
-              },
+              onTap: () => provider.increaseProduct(product),
               child: Icon(
                 isSelected
                     ? BootstrapIcons.plus_circle_fill
@@ -83,7 +74,7 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
               ),
             ),
             title: Text(
-              widget.products[index],
+              product,
               style: GoogleFonts.poppins(
                 color: Colors.black,
                 fontSize: 17.sp,
@@ -111,24 +102,11 @@ class _CategoryProductsScreenState extends State<CategoryProductsScreen> {
                     icon: Icon(
                       quantity > 1
                           ? BootstrapIcons.dash
-                          : BootstrapIcons
-                              .x, // Show `-` if quantity > 1, else `X`
-                      color: quantity > 1 ? Colors.red : Colors.red,
+                          : BootstrapIcons.x,
+                      color: Colors.red,
                       size: 30.sp,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        if (quantity > 1) {
-                          selectedProducts[product] =
-                              quantity - 1; // Decrease quantity
-                        } else {
-                          selectedProducts.remove(
-                            product,
-                          ); // Remove if quantity reaches 0
-                        }
-                      });
-                      widget.onSelectedProductsChanged();
-                    },
+                    onPressed: () => provider.decreaseProduct(product),
                   ),
               ],
             ),

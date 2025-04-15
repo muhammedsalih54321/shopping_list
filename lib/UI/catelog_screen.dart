@@ -6,7 +6,7 @@ import 'package:shopping_list/Components/Products_list.dart';
 // Ensure this file exists
 
 class CatalogScreen extends StatelessWidget {
-  final Function(Map<String, dynamic>) onNavigate;
+ final Function(Map<String, dynamic> category) onNavigate;
 
   const CatalogScreen({super.key, required this.onNavigate});
   @override

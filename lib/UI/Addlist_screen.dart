@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shopping_list/Provider/provider_logic.dart';
 import 'package:shopping_list/UI/Addproducts_list.dart';
 
 class AddlistScreen extends StatefulWidget {
@@ -26,11 +28,9 @@ class _AddlistScreenState extends State<AddlistScreen> {
     'Food',
   ];
 
- 
-
-
   @override
   Widget build(BuildContext context) {
+    final shoppingListProvider = Provider.of<ShoppingListProvider>(context);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -52,30 +52,28 @@ class _AddlistScreenState extends State<AddlistScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              if (_controller.text.trim().isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Color(0xFF5856D6),
-                  behavior: SnackBarBehavior.floating,
-                  action: SnackBarAction(label: 'Dismiss', textColor:Colors.white,onPressed: (){}),
-                  content: Text(
-                    'Please enter a list title',
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w500,
-                      height: 1.29.h,
-                      letterSpacing: -0.41,
-                    ),
-                  ),
+                String inputTitle = _controller.text.trim();
+
+              if (inputTitle.isEmpty) {
+                _showSnackBar('Please enter a list title');
+                return;
+              }
+
+              final titleExists = shoppingListProvider.shoppingLists
+                  .any((list) => list.title == inputTitle);
+
+              if (titleExists) {
+                _showSnackBar('This title is already used, please choose a new one');
+                return;
+              }
+
+              // Navigate if title is unique
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => AddproductsList(listname: inputTitle),
                 ),
               );
-                return;
-              }else{
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_)=>AddproductsList(listname: _controller.text.toString(),)));
-              
-                 
-              }
             },
             child: Text(
               'Done',
@@ -153,7 +151,7 @@ class _AddlistScreenState extends State<AddlistScreen> {
                         },
                         child: Container(
                           height: 30.h,
-                         width: Suggestions[index].length * 12.0.w,
+                          width: Suggestions[index].length * 12.0.w,
                           decoration: BoxDecoration(
                             color: Color(0xFF5856D6),
                             borderRadius: BorderRadius.circular(20.r),
@@ -175,6 +173,29 @@ class _AddlistScreenState extends State<AddlistScreen> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+ void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: const Color(0xFF5856D6),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: 'Dismiss',
+          textColor: Colors.white,
+          onPressed: () {},
+        ),
+        content: Text(
+          message,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w500,
+            height: 1.29.h,
+            letterSpacing: -0.41,
           ),
         ),
       ),

@@ -1,15 +1,23 @@
 import 'package:hive/hive.dart';
-import 'product.dart'; // If it includes Product
+import 'product.dart'; // Assuming you have this already
+import 'package:uuid/uuid.dart';
 
-part 'shopping_list.g.dart'; // ✅ Important
+part 'shopping_list.g.dart';
 
 @HiveType(typeId: 0)
-class ShoppingList {
+class ShoppingList extends HiveObject {
   @HiveField(0)
-  final String title;
+  String id;
 
   @HiveField(1)
-  final List<Product> products;
+  String title;
 
-  ShoppingList({required this.title, required this.products});
+  @HiveField(2)
+  List<Product> products;
+
+  ShoppingList({
+    String? id,
+    required this.title,
+    required this.products,
+  }) : id = id ?? const Uuid().v4(); // generate unique ID
 }
